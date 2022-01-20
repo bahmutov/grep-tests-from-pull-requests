@@ -46,7 +46,7 @@ async function registerPlugin(on, config, options = {}) {
     }
 
     const prBody = await getPullRequestBody(prOptions, envOptions)
-    const testsToRun = getTestsToRun(prBody)
+    const testsToRun = getTestsToRun(options.tags, prBody)
     console.log('tests to run', testsToRun)
     if (testsToRun.all) {
       console.log('running all tests, removing possible grep options')
