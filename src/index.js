@@ -48,6 +48,16 @@ async function registerPlugin(on, config, options = {}) {
     const prBody = await getPullRequestBody(prOptions, envOptions)
     const testsToRun = getTestsToRun(prBody)
     console.log('tests to run', testsToRun)
+    if (testsToRun.all) {
+      console.log('running all tests, removing possible grep options')
+      delete config.env.grep
+      delete config.env.grepTags
+    } else if (testsToRun.tags.length) {
+      const grepTags = testsToRun.tags.join(',')
+      console.log('grepping by tags "%s"', grepTags)
+      delete config.env.grep
+      config.env.grepTags = grepTags
+    }
   }
 }
 
