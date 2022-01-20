@@ -1,10 +1,11 @@
 {
   "name": "grep-tests-from-pull-requests",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Grabs the test tags to run from the pull request text",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release"
   },
   "files": [
     "bin",
@@ -15,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bahmutov/grep-tests-from-pull-requests.git"
+    "url": "https://github.com/bahmutov/grep-tests-from-pull-requests.git"
   },
   "keywords": [
     "cypress-plugin"
@@ -27,7 +28,8 @@
   },
   "homepage": "https://github.com/bahmutov/grep-tests-from-pull-requests#readme",
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "prettier": "^2.5.1",
+    "semantic-release": "^19.0.2"
   },
   "dependencies": {
     "arg": "^5.0.1",
