@@ -27,7 +27,7 @@ async function registerPlugin(on, config, options = {}) {
     config.env.pullRequestNumber ||
     process.env.TEST_PULL_REQUEST_NUMBER
 
-  if (testPullRequest) {
+  if (testPullRequest && options.tags) {
     const testPullRequestNumber = Number(testPullRequest)
     console.log(
       'picking the tests to run based on PR number %d',
