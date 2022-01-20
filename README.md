@@ -2,6 +2,8 @@
 
 > Grabs the test tags to run from the pull request text
 
+Read the blog post [Pick Tests To Run Using The Pull Request Text](https://glebbahmutov.com/blog/pick-tests-using-pull-request/).
+
 ## Install
 
 ```shell
