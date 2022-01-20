@@ -82,4 +82,80 @@ function getTestsToRun(tagsToLookFor, pullRequestBody) {
   return testsToRun
 }
 
-module.exports = { getPullRequestBody, getTestsToRun }
+async function getPullRequestNumber(
+  owner,
+  repo,
+  testPullRequest,
+  commit,
+  envOptions,
+) {
+  if (testPullRequest) {
+    debug('known pull request, returning %s', testPullRequest)
+    return Number(testPullRequest)
+  }
+
+  if (!commit) {
+    throw new Error('Cannot find the pull request number without commit SHA')
+  }
+
+  const number = await getPullRequestForHeadCommit(
+    { owner, repo, commit },
+    envOptions,
+  )
+  return number
+}
+
+async function getPullRequestForHeadCommit(options, envOptions) {
+  if (options.token) {
+    console.error('you have accidentally included the token in the options')
+    console.error('please use the second environment options object instead')
+    delete options.token
+  }
+
+  debug('getting pull from head commit: %o', options)
+
+  validateCommonOptions(options, envOptions)
+
+  if (!options.commit) {
+    throw new Error('options.commit SHA is required')
+  }
+
+  // https://docs.github.com/en/rest/reference/pulls#list-pull-requests
+  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/pulls`
+  debug('url: %s', url)
+
+  // @ts-ignore
+  const res = await got.get(url, {
+    headers: {
+      authorization: `Bearer ${envOptions.token}`,
+      accept: 'application/vnd.github.v3+json',
+    },
+  })
+
+  const json = JSON.parse(res.body)
+  const pullRequests = json.filter((pr) => pr.head.sha === options.commit)
+  if (!pullRequests.length) {
+    throw new Error(
+      `Could not find pull request with head SHA ${options.commit}`,
+    )
+  }
+  if (pullRequests.length > 1) {
+    throw new Error(
+      `Found ${pullRequests.length} pull requests with head SHA ${options.commit}`,
+    )
+  }
+
+  debug(
+    'for head commit %s found pull request %d',
+    options.commit,
+    pullRequests[0].number,
+  )
+  return pullRequests[0].number
+}
+
+module.exports = {
+  getPullRequestBody,
+  getTestsToRun,
+  getPullRequestForHeadCommit,
+  getPullRequestNumber,
+}

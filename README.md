@@ -39,6 +39,10 @@ module.exports = async (on, config) => {
 
 **Important:** notice the plugin registration is an async function, thus you must await the registration. This makes your plugin file function `async`. Make sure to return the `config` object, as it might be changed by this plugin.
 
+## Debugging
+
+This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.
+
 ## Small print
 
 Author: Gleb Bahmutov &copy; 2022

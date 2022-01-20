@@ -1,7 +1,11 @@
 /// <reference types="cypress" />
 // @ts-check
 const debug = require('debug')('grep-tests-from-pull-requests')
-const { getPullRequestBody, getTestsToRun } = require('./utils')
+const {
+  getPullRequestBody,
+  getTestsToRun,
+  getPullRequestNumber,
+} = require('./utils')
 
 function getContext() {
   let context = 'Cypress tests'
@@ -27,11 +31,33 @@ async function registerPlugin(on, config, options = {}) {
     config.env.pullRequestNumber ||
     process.env.TEST_PULL_REQUEST_NUMBER
 
-  if (testPullRequest && options.tags) {
+  // commit SHA is a backup if the pull request is unknown
+  const testCommit =
+    options.commit ||
+    options.testCommit ||
+    config.env.commit ||
+    config.env.testCommit
+
+  if ((testPullRequest || testCommit) && options.tags) {
     if (typeof options.tags === 'string') {
       options.tags = [options.tags]
     }
-    const testPullRequestNumber = Number(testPullRequest)
+
+    const envOptions = {
+      token: options.token,
+    }
+
+    const testPullRequestNumber = await getPullRequestNumber(
+      options.owner,
+      options.repo,
+      testPullRequest,
+      testCommit,
+      envOptions,
+    )
+    if (isNaN(testPullRequestNumber)) {
+      throw new Error('Could not find the pull request number')
+    }
+
     console.log(
       'picking the tests to run based on PR number %d with tags %s',
       testPullRequestNumber,
@@ -42,9 +68,6 @@ async function registerPlugin(on, config, options = {}) {
       owner: options.owner,
       repo: options.repo,
       pull: testPullRequestNumber,
-    }
-    const envOptions = {
-      token: options.token,
     }
 
     const prBody = await getPullRequestBody(prOptions, envOptions)

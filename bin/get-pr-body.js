@@ -2,17 +2,23 @@
 
 const debug = require('debug')('grep-tests-from-pull-requests')
 const arg = require('arg')
-const { getPullRequestBody, getTestsToRun } = require('../src/utils')
+const {
+  getPullRequestNumber,
+  getPullRequestBody,
+  getTestsToRun,
+} = require('../src/utils')
 
 const args = arg({
   '--owner': String,
   '--repo': String,
   '--pull': Number,
+  '--commit': String,
 
   // aliases
   '-o': '--owner',
   '-r': '--repo',
   '-p': '--pull',
+  '-c': '--commit',
 })
 debug('args: %o', args)
 
@@ -31,18 +37,34 @@ const options = {
   owner: args['--owner'],
   repo: args['--repo'],
   pull: args['--pull'],
+  commit: args['--commit'],
 }
 const envOptions = {
   token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
 }
 
-getPullRequestBody(options, envOptions)
-  .then((body) => {
-    console.log(body)
-    const testsToRun = getTestsToRun(body)
-    console.log('tests to run')
-    console.log(testsToRun)
+getPullRequestNumber(
+  options.owner,
+  options.repo,
+  options.pull,
+  options.commit,
+  envOptions,
+)
+  .then((testPullRequestNumber) => {
+    if (isNaN(testPullRequestNumber)) {
+      throw new Error('Could not find the pull request number')
+    }
+
+    options.pull = testPullRequestNumber
+
+    return getPullRequestBody(options, envOptions).then((body) => {
+      console.log(body)
+      const testsToRun = getTestsToRun(['@log', '@sanity'], body)
+      console.log('tests to run')
+      console.log(testsToRun)
+    })
   })
+
   .catch((e) => {
     console.error(e)
     process.exit(1)
