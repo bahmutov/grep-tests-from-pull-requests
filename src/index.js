@@ -30,11 +30,10 @@ async function registerPlugin(on, config, options = {}) {
   if (testPullRequest && options.tags) {
     const testPullRequestNumber = Number(testPullRequest)
     console.log(
-      'picking the tests to run based on PR number %d',
+      'picking the tests to run based on PR number %d with tags %o',
       testPullRequestNumber,
+      options.tags,
     )
-    // TODO: get the pull request body, then find the test tags to run
-    // and set into the config object "env" for cypress-grep to pick up
 
     const prOptions = {
       owner: options.owner,
