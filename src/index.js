@@ -35,6 +35,19 @@ async function registerPlugin(on, config, options = {}) {
     )
     // TODO: get the pull request body, then find the test tags to run
     // and set into the config object "env" for cypress-grep to pick up
+
+    const prOptions = {
+      owner: options.owner,
+      repo: options.repo,
+      pull: testPullRequestNumber,
+    }
+    const envOptions = {
+      token: options.token,
+    }
+
+    const prBody = await getPullRequestBody(prOptions, envOptions)
+    const testsToRun = getTestsToRun(prBody)
+    console.log('tests to run', testsToRun)
   }
 }
 
