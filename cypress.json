@@ -1,0 +1,7 @@
+{
+  "fixturesFolder": false,
+  "env": {
+    "grepFilterSpecs": true,
+    "grepOmitFiltered": true
+  }
+}
