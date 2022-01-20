@@ -1,5 +1,13 @@
 name: pr
-on: pull_request
+on:
+  # run tests when the user opened / reopened a PR
+  # and also run the selected tests when the user possible
+  # checked a box with the type of the tests to run
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - edited
 jobs:
   test:
     runs-on: ubuntu-20.04
