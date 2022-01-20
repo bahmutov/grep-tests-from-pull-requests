@@ -27,14 +27,39 @@ async function registerPlugin(on, config, options = {}) {
     config.env.pullRequestNumber ||
     process.env.TEST_PULL_REQUEST_NUMBER
 
-  if (testPullRequest) {
+  if (testPullRequest && options.tags) {
+    if (typeof options.tags === 'string') {
+      options.tags = [options.tags]
+    }
     const testPullRequestNumber = Number(testPullRequest)
     console.log(
-      'picking the tests to run based on PR number %d',
+      'picking the tests to run based on PR number %d with tags %s',
       testPullRequestNumber,
+      options.tags.join(', '),
     )
-    // TODO: get the pull request body, then find the test tags to run
-    // and set into the config object "env" for cypress-grep to pick up
+
+    const prOptions = {
+      owner: options.owner,
+      repo: options.repo,
+      pull: testPullRequestNumber,
+    }
+    const envOptions = {
+      token: options.token,
+    }
+
+    const prBody = await getPullRequestBody(prOptions, envOptions)
+    const testsToRun = getTestsToRun(options.tags, prBody)
+    console.log('tests to run', testsToRun)
+    if (testsToRun.all) {
+      console.log('running all tests, removing possible grep options')
+      delete config.env.grep
+      delete config.env.grepTags
+    } else if (testsToRun.tags.length) {
+      const grepTags = testsToRun.tags.join(',')
+      console.log('grepping by tags "%s"', grepTags)
+      delete config.env.grep
+      config.env.grepTags = grepTags
+    }
   }
 }
 

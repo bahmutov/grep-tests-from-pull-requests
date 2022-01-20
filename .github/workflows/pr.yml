@@ -1,5 +1,16 @@
 name: pr
-on: pull_request
+on:
+  # run tests when the user opened / reopened a PR
+  # or pushed a new commit (synchronize type)
+  # and also run the selected tests when the user possible
+  # checked a box with the type of the tests to run
+  # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#pull_request
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - edited
 jobs:
   test:
     runs-on: ubuntu-20.04

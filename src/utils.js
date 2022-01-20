@@ -52,24 +52,32 @@ function isLineChecked(line) {
 }
 
 /**
+ * @param {string[]} tagsToLookFor String tags to find in the pull request body
  * @param {string} pullRequestBody The pull request text with checkboxes
  */
-function getTestsToRun(pullRequestBody) {
+function getTestsToRun(tagsToLookFor, pullRequestBody) {
   const testsToRun = {
     all: false,
     tags: [],
   }
+
+  if (!tagsToLookFor || !tagsToLookFor.length) {
+    debug('no tags to look for, running all tests')
+    testsToRun.all = true
+    return testsToRun
+  }
+  debug('looking for checkboxes with tags: %o', tagsToLookFor)
+
   const lines = pullRequestBody.split('\n')
   lines.forEach((line) => {
     if (line.includes('all tests') && isLineChecked(line)) {
       testsToRun.all = true
     }
-    if (line.includes('@sanity') && isLineChecked(line)) {
-      testsToRun.tags.push('@sanity')
-    }
-    if (line.includes('@user') && isLineChecked(line)) {
-      testsToRun.tags.push('@user')
-    }
+    tagsToLookFor.forEach((tag) => {
+      if (line.includes(tag) && isLineChecked(line)) {
+        testsToRun.tags.push(tag)
+      }
+    })
   })
   return testsToRun
 }

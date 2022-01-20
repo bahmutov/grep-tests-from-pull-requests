@@ -12,6 +12,8 @@ module.exports = async (on, config) => {
   // so if we find the test tags in the pull request body
   // we can grep for them by setting the grep config
   await require('../../src')(on, config, {
+    // try to find checkbox lines in the pull request body with these tags
+    tags: ['@sanity', '@quick', '@some-other-tag'],
     // let's take this repo
     owner: 'bahmutov',
     repo: 'grep-tests-from-pull-requests',
