@@ -22,11 +22,3 @@ jobs:
           # this token is not tied to any repository
           # and can be used to set the commit status in the repos I have access to
           PERSONAL_GH_TOKEN: ${{ secrets.PERSONAL_GH_TOKEN }}
-
-      - name: Semantic Release 🚀
-        uses: cycjimmy/semantic-release-action@v2
-        with:
-          branch: main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
