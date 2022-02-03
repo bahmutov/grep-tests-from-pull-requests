@@ -41,6 +41,23 @@ module.exports = async (on, config) => {
 
 **Important:** notice the plugin registration is an async function, thus you must await the registration. This makes your plugin file function `async`. Make sure to return the `config` object, as it might be changed by this plugin.
 
+## Resolved value
+
+The function might resolve with an object if the pull request was found. You can check if the user wants to run all the tests, or a list of tags
+
+```js
+const testsToRun = await require('grep-tests-from-pull-requests')(...)
+if (testsToRun) {
+  if (testsToRun.all) {
+    console.log('running all tests')
+  } else if (testsToRun.tags.length) {
+    console.log('the user picked %s tags to run', testsToRun.tags.join(', '))
+  } else {
+    console.log('the user did not pick any tests to run')
+  }
+}
+```
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.

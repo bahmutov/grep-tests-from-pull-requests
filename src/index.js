@@ -83,6 +83,8 @@ async function registerPlugin(on, config, options = {}) {
       delete config.env.grep
       config.env.grepTags = grepTags
     }
+
+    return testsToRun
   }
 }
 
