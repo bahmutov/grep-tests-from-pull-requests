@@ -59,6 +59,7 @@ function getTestsToRun(tagsToLookFor, pullRequestBody) {
   const testsToRun = {
     all: false,
     tags: [],
+    baseUrl: null,
   }
 
   if (!tagsToLookFor || !tagsToLookFor.length) {
@@ -73,6 +74,11 @@ function getTestsToRun(tagsToLookFor, pullRequestBody) {
     if (line.includes('all tests') && isLineChecked(line)) {
       testsToRun.all = true
     }
+
+    if (line.includes('baseUrl')) {
+      testsToRun.baseUrl = line.split('baseUrl')[1].trim()
+    }
+
     tagsToLookFor.forEach((tag) => {
       if (line.includes(tag) && isLineChecked(line)) {
         testsToRun.tags.push(tag)

@@ -41,6 +41,18 @@ module.exports = async (on, config) => {
 
 **Important:** notice the plugin registration is an async function, thus you must await the registration. This makes your plugin file function `async`. Make sure to return the `config` object, as it might be changed by this plugin.
 
+## baseUrl
+
+If the pull request text has a line with just `baseUrl <URL>` the it will be extracted too. This makes it convenient to specify a custom deploy to be tested for this specific pull request.
+
+```text
+// pull request text
+some test tags
+
+These tests should be run against this URL
+baseUrl https://preview-1.acme.co
+```
+
 ## Resolved value
 
 The function might resolve with an object if the pull request was found. You can check if the user wants to run all the tests, or a list of tags
@@ -48,6 +60,9 @@ The function might resolve with an object if the pull request was found. You can
 ```js
 const testsToRun = await require('grep-tests-from-pull-requests')(...)
 if (testsToRun) {
+  if (testsToRun.baseUrl) {
+    console.log('testing deploy at %s', testsToRun.baseUrl)
+  }
   if (testsToRun.all) {
     console.log('running all tests')
   } else if (testsToRun.tags.length) {
