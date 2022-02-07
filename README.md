@@ -43,6 +43,17 @@ module.exports = async (on, config) => {
 
 **Important:** notice the plugin registration is an async function, thus you must await the registration. This makes your plugin file function `async`. Make sure to return the `config` object, as it might be changed by this plugin.
 
+**Tip:** you can find the test tags, but skip using them using an option
+
+```js
+const pickTestsFromPullRequest = require('grep-tests-from-pull-requests')
+const pullOptions = {
+  ...,
+  setTests: true // default, use false to disable setting the test tags
+}
+await pickTestsFromPullRequest(on, config, pullOptions)
+```
+
 ## baseUrl
 
 If the pull request text has a line with just `baseUrl <URL>` the it will be extracted too. This makes it convenient to specify a custom deploy to be tested for this specific pull request.
@@ -63,6 +74,7 @@ const pullOptions = {
   ...,
   setBaseUrl: true // default, use false to disable setting the baseUrl
 }
+await pickTestsFromPullRequest(on, config, pullOptions)
 ```
 
 ## Resolved value
