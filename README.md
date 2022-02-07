@@ -17,11 +17,12 @@ Register the plugin in your plugins file _before_ [cypress-grep](https://github.
 
 ```js
 // cypress/plugins/index.js
+const pickTestsFromPullRequest = require('grep-tests-from-pull-requests')
 module.exports = async (on, config) => {
   // include this plugin before cypress-grep
   // so if we find the test tags in the pull request body
   // we can grep for them by setting the grep config
-  await require('grep-tests-from-pull-requests')(on, config, {
+  const pullOptions = {
     // try to find checkbox lines in the pull request body with these tags
     tags: ['@log', '@sanity', '@user'],
     // repo with the pull request text to read
@@ -29,7 +30,8 @@ module.exports = async (on, config) => {
     repo: 'todomvc-no-tests-vercel',
     // to get a private repo above, you might need a personal token
     token: process.env.PERSONAL_GH_TOKEN || process.env.GITHUB_TOKEN,
-  })
+  }
+  await pickTestsFromPullRequest(on, config, pullOptions)
 
   // cypress-grep plugin registration
 
@@ -53,12 +55,23 @@ These tests should be run against this URL
 baseUrl https://preview-1.acme.co
 ```
 
+**Tip:** you can control if you want to set the baseUrl based on the pull request text using an option
+
+```js
+const pickTestsFromPullRequest = require('grep-tests-from-pull-requests')
+const pullOptions = {
+  ...,
+  setBaseUrl: true // default, use false to disable setting the baseUrl
+}
+```
+
 ## Resolved value
 
 The function might resolve with an object if the pull request was found. You can check if the user wants to run all the tests, or a list of tags
 
 ```js
-const testsToRun = await require('grep-tests-from-pull-requests')(...)
+const pickTestsFromPullRequest = require('grep-tests-from-pull-requests')
+const testsToRun = await pickTestsFromPullRequest(...)
 if (testsToRun) {
   if (testsToRun.baseUrl) {
     console.log('testing deploy at %s', testsToRun.baseUrl)

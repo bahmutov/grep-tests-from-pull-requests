@@ -7,17 +7,6 @@ const {
   getPullRequestNumber,
 } = require('./utils')
 
-function getContext() {
-  let context = 'Cypress tests'
-  if (process.env.CIRCLE_NODE_INDEX && process.env.CIRCLE_NODE_TOTAL) {
-    // index starts with 0
-    const machineIndex = Number(process.env.CIRCLE_NODE_INDEX) + 1
-    const totalMachines = Number(process.env.CIRCLE_NODE_TOTAL)
-    context += ` (machine ${machineIndex}/${totalMachines})`
-  }
-  return context
-}
-
 /**
  * @param {Cypress.PluginEvents} on Function for registering event handlers
  */
@@ -75,8 +64,15 @@ async function registerPlugin(on, config, options = {}) {
     console.log('tests to run', testsToRun)
     if (testsToRun) {
       if (testsToRun.baseUrl) {
-        console.log('setting the baseUrl to %s', testsToRun.baseUrl)
-        config.baseUrl = testsToRun.baseUrl
+        if (options.setBaseUrl === false) {
+          debug(
+            'skipping setting the baseUrl to %s because setBaseUrl is false',
+            testsToRun.baseUrl,
+          )
+        } else {
+          console.log('setting the baseUrl to %s', testsToRun.baseUrl)
+          config.baseUrl = testsToRun.baseUrl
+        }
       }
 
       if (testsToRun.all) {
