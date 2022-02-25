@@ -98,6 +98,26 @@ if (testsToRun) {
 }
 ```
 
+## Aliases
+
+This package includes several scripts that let you find the pull request body and the test tags and the base URL of a given pull request.
+
+### get-pr-body
+
+Prints the test tags found in the pull request text
+
+```
+$ npx get-pr-body --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+```
+
+### get-pr-comments
+
+Prints all pull request comments
+
+```
+$ npx get-pr-comments --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+```
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.

@@ -12,7 +12,8 @@
     "src"
   ],
   "alias": {
-    "get-pr-body": "./bin/get-pr-body.js"
+    "get-pr-body": "./bin/get-pr-body.js",
+    "get-pr-comments": "./bin/get-pr-comments.js"
   },
   "repository": {
     "type": "git",
