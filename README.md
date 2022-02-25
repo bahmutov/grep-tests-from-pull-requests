@@ -127,6 +127,14 @@ Prints all pull request comments
 $ npx get-pr-comments --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
 ```
 
+### get-pr-tests
+
+Prints all test tags found in the pull request
+
+```
+$ npx get-pr-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+```
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.
