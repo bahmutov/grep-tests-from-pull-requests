@@ -39,9 +39,13 @@ jobs:
           node ./bin/get-pr-body.js \
             --owner bahmutov --repo grep-tests-from-pull-requests \
             --pull ${{ github.event.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print PR comments 🖨
         run: |
           node ./bin/get-pr-comments.js \
             --owner bahmutov --repo grep-tests-from-pull-requests \
             --pull ${{ github.event.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
