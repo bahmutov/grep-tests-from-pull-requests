@@ -56,7 +56,7 @@ await pickTestsFromPullRequest(on, config, pullOptions)
 
 ## baseUrl
 
-If the pull request text has a line with just `baseUrl <URL>` the it will be extracted too. This makes it convenient to specify a custom deploy to be tested for this specific pull request.
+If the pull request text OR its comments have a line with just `baseUrl <URL>` the it will be extracted too. This makes it convenient to specify a custom deploy to be tested for this specific pull request.
 
 ```text
 // pull request text
@@ -65,6 +65,15 @@ some test tags
 These tests should be run against this URL
 baseUrl https://preview-1.acme.co
 ```
+
+The base URL is found if it is a single line of text in the pull request body or its comment in one of these formats:
+
+```text
+baseUrl https://preview-1.acme.co
+TestURL: https://preview-1.acme.co
+```
+
+If the URL is present in the body and in several comments, the URL found in the latest comment wins.
 
 **Tip:** you can control if you want to set the baseUrl based on the pull request text using an option
 

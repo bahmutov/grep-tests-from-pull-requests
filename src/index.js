@@ -3,6 +3,7 @@
 const debug = require('debug')('grep-tests-from-pull-requests')
 const {
   getPullRequestBody,
+  getPullRequestComments,
   getTestsToRun,
   getPullRequestNumber,
 } = require('./utils')
@@ -60,7 +61,8 @@ async function registerPlugin(on, config, options = {}) {
     }
 
     const prBody = await getPullRequestBody(prOptions, envOptions)
-    const testsToRun = getTestsToRun(options.tags, prBody)
+    const prComments = await getPullRequestComments(prOptions, envOptions)
+    const testsToRun = getTestsToRun(options.tags, prBody, prComments)
     console.log('tests to run', testsToRun)
     if (testsToRun) {
       if (testsToRun.baseUrl) {

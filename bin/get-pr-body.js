@@ -59,7 +59,8 @@ getPullRequestNumber(
 
     return getPullRequestBody(options, envOptions).then((body) => {
       console.log(body)
-      const testsToRun = getTestsToRun(['@log', '@sanity'], body)
+      const prComments = []
+      const testsToRun = getTestsToRun(['@log', '@sanity'], body, prComments)
       console.log('tests to run')
       console.log(testsToRun)
     })

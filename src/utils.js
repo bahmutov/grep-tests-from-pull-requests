@@ -14,6 +14,25 @@ function validateCommonOptions(options, envOptions) {
   }
 }
 
+/**
+ * Finds and returns the test (base URL) in the given text line, if present.
+ * @param {string} line a single line of text
+ */
+function getBaseUrlFromTextLine(line) {
+  // if the line is in the form of
+  // baseUlr <url>
+  if (line.includes('baseUrl')) {
+    return line.split('baseUrl')[1].trim()
+  }
+  // if the line is in the frm of
+  // Test URL: <url>
+  if (line.match(/^\s*Test URL:/)) {
+    return line.split('Test URL:')[1].trim()
+  }
+
+  // did not find the base url
+}
+
 // assume we do need to authenticate to fetch the pull request body
 async function getPullRequestBody(options, envOptions) {
   if (options.token) {
@@ -48,10 +67,16 @@ async function getPullRequestBody(options, envOptions) {
 }
 
 /**
+ * @typedef {object} PullRequestComment
+ * @property {string} body The text of the comment
+ */
+
+/**
  * Return the list of comments on a specific pull request. The last
  * commit is the latest commit. Each returned comment is an object
  * with "body", and other properties.
  * assume we do need to authenticate to fetch the pull request body
+ * @returns {Promise<PullRequestComment[]>} List of comments.
  */
 async function getPullRequestComments(options, envOptions) {
   if (options.token) {
@@ -82,6 +107,7 @@ async function getPullRequestComments(options, envOptions) {
   })
 
   const comments = JSON.parse(res.body)
+  debug('found %d comments for PR %d', comments.length, options.pull)
   // each comment in the array is an object with a body property
   return comments
 }
@@ -93,8 +119,9 @@ function isLineChecked(line) {
 /**
  * @param {string[]} tagsToLookFor String tags to find in the pull request body
  * @param {string} pullRequestBody The pull request text with checkboxes
+ * @param {PullRequestComment[]} pullRequestComments The pull request comments
  */
-function getTestsToRun(tagsToLookFor, pullRequestBody) {
+function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
   const testsToRun = {
     all: false,
     tags: [],
@@ -114,9 +141,7 @@ function getTestsToRun(tagsToLookFor, pullRequestBody) {
       testsToRun.all = true
     }
 
-    if (line.includes('baseUrl')) {
-      testsToRun.baseUrl = line.split('baseUrl')[1].trim()
-    }
+    testsToRun.baseUrl = getBaseUrlFromTextLine(line)
 
     tagsToLookFor.forEach((tag) => {
       if (line.includes(tag) && isLineChecked(line)) {
@@ -124,6 +149,15 @@ function getTestsToRun(tagsToLookFor, pullRequestBody) {
       }
     })
   })
+
+  // pull requests can overwrite the base url
+  pullRequestComments.forEach((comment) => {
+    const commentLines = comment.body.split('\n')
+    commentLines.forEach((line) => {
+      testsToRun.baseUrl = getBaseUrlFromTextLine(line)
+    })
+  })
+
   return testsToRun
 }
 
