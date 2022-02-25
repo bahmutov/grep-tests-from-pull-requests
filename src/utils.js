@@ -47,6 +47,45 @@ async function getPullRequestBody(options, envOptions) {
   return json.body
 }
 
+/**
+ * Return the list of comments on a specific pull request. The last
+ * commit is the latest commit. Each returned comment is an object
+ * with "body", and other properties.
+ * assume we do need to authenticate to fetch the pull request body
+ */
+async function getPullRequestComments(options, envOptions) {
+  if (options.token) {
+    console.error('you have accidentally included the token in the options')
+    console.error('please use the second environment options object instead')
+    delete options.token
+  }
+
+  debug('getting pull request comments: %o', options)
+
+  validateCommonOptions(options, envOptions)
+
+  if (!options.pull) {
+    throw new Error('options.pull number is required')
+  }
+
+  // https://docs.github.com/en/rest/reference/pulls#get-a-pull-request
+  // https://api.github.com/repos/bahmutov/todomvc-no-tests-vercel/issues/10/comments
+  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/issues/${options.pull}/comments`
+  debug('url: %s', url)
+
+  // @ts-ignore
+  const res = await got.get(url, {
+    headers: {
+      authorization: `Bearer ${envOptions.token}`,
+      accept: 'application/vnd.github.v3+json',
+    },
+  })
+
+  const comments = JSON.parse(res.body)
+  // each comment in the array is an object with a body property
+  return comments
+}
+
 function isLineChecked(line) {
   return line.includes('[x]')
 }
@@ -161,6 +200,7 @@ async function getPullRequestForHeadCommit(options, envOptions) {
 
 module.exports = {
   getPullRequestBody,
+  getPullRequestComments,
   getTestsToRun,
   getPullRequestForHeadCommit,
   getPullRequestNumber,
