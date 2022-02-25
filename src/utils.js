@@ -107,6 +107,7 @@ async function getPullRequestComments(options, envOptions) {
   })
 
   const comments = JSON.parse(res.body)
+  debug('found %d comments for PR %d', comments.length, options.pull)
   // each comment in the array is an object with a body property
   return comments
 }
