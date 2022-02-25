@@ -49,3 +49,11 @@ jobs:
             --pull ${{ github.event.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print PR test tags 🖨
+        run: |
+          node ./bin/get-pr-tests.js \
+            --owner bahmutov --repo grep-tests-from-pull-requests \
+            --pull ${{ github.event.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
