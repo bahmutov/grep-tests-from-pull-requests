@@ -1,6 +1,6 @@
 // @ts-check
 const got = require('got')
-const debug = require('debug')('cypress-set-github-status')
+const debug = require('debug')('grep-tests-from-pull-requests')
 
 function validateCommonOptions(options, envOptions) {
   if (!options.owner) {
