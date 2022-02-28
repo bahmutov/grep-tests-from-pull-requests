@@ -141,7 +141,11 @@ function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
       testsToRun.all = true
     }
 
-    testsToRun.baseUrl = getBaseUrlFromTextLine(line)
+    const foundUrl = getBaseUrlFromTextLine(line)
+    if (foundUrl) {
+      debug('found base url: %s', foundUrl)
+      testsToRun.baseUrl = foundUrl
+    }
 
     tagsToLookFor.forEach((tag) => {
       if (line.includes(tag) && isLineChecked(line)) {
@@ -154,7 +158,11 @@ function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
   pullRequestComments.forEach((comment) => {
     const commentLines = comment.body.split('\n')
     commentLines.forEach((line) => {
-      testsToRun.baseUrl = getBaseUrlFromTextLine(line)
+      const foundUrl = getBaseUrlFromTextLine(line)
+      if (foundUrl) {
+        debug('found base url in the comment: %s', foundUrl)
+        testsToRun.baseUrl = foundUrl
+      }
     })
   })
 
