@@ -1,4 +1,5 @@
 // @ts-check
+const { getBaseUrlFromTextLine } = require('./universal')
 const got = require('got')
 const debug = require('debug')('grep-tests-from-pull-requests')
 
@@ -12,25 +13,6 @@ function validateCommonOptions(options, envOptions) {
   if (!envOptions.token) {
     throw new Error('envOptions.token is required')
   }
-}
-
-/**
- * Finds and returns the test (base URL) in the given text line, if present.
- * @param {string} line a single line of text
- */
-function getBaseUrlFromTextLine(line) {
-  // if the line is in the form of
-  // baseUlr <url>
-  if (line.includes('baseUrl')) {
-    return line.split('baseUrl')[1].trim()
-  }
-  // if the line is in the frm of
-  // Test URL: <url>
-  if (line.match(/^\s*Test URL:/)) {
-    return line.split('Test URL:')[1].trim()
-  }
-
-  // did not find the base url
 }
 
 // assume we do need to authenticate to fetch the pull request body
