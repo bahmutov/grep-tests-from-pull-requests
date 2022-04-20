@@ -36,16 +36,22 @@ async function getPullRequestBody(options, envOptions) {
   const url = `https://api.github.com/repos/${options.owner}/${options.repo}/pulls/${options.pull}`
   debug('url: %s', url)
 
-  // @ts-ignore
-  const res = await got.get(url, {
-    headers: {
-      authorization: `Bearer ${envOptions.token}`,
-      accept: 'application/vnd.github.v3+json',
-    },
-  })
+  try {
+    // @ts-ignore
+    const res = await got.get(url, {
+      headers: {
+        authorization: `Bearer ${envOptions.token}`,
+        accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-  const json = JSON.parse(res.body)
-  return json.body
+    const json = JSON.parse(res.body)
+    return json.body
+  } catch (err) {
+    console.error('Failed to fetch pull request %s', url)
+    console.error(err.message)
+    throw err
+  }
 }
 
 /**
@@ -80,18 +86,24 @@ async function getPullRequestComments(options, envOptions) {
   const url = `https://api.github.com/repos/${options.owner}/${options.repo}/issues/${options.pull}/comments`
   debug('url: %s', url)
 
-  // @ts-ignore
-  const res = await got.get(url, {
-    headers: {
-      authorization: `Bearer ${envOptions.token}`,
-      accept: 'application/vnd.github.v3+json',
-    },
-  })
+  try {
+    // @ts-ignore
+    const res = await got.get(url, {
+      headers: {
+        authorization: `Bearer ${envOptions.token}`,
+        accept: 'application/vnd.github.v3+json',
+      },
+    })
 
-  const comments = JSON.parse(res.body)
-  debug('found %d comments for PR %d', comments.length, options.pull)
-  // each comment in the array is an object with a body property
-  return comments
+    const comments = JSON.parse(res.body)
+    debug('found %d comments for PR %d', comments.length, options.pull)
+    // each comment in the array is an object with a body property
+    return comments
+  } catch (err) {
+    console.error('Failed to fetch pull request comments %s', url)
+    console.error(err.message)
+    throw err
+  }
 }
 
 function isLineChecked(line) {
