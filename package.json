@@ -11,7 +11,7 @@
     "bin",
     "src"
   ],
-  "alias": {
+  "bin": {
     "get-pr-body": "./bin/get-pr-body.js",
     "get-pr-comments": "./bin/get-pr-comments.js",
     "get-pr-tests": "./bin/get-pr-tests.js"
