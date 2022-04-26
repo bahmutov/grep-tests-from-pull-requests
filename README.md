@@ -117,7 +117,15 @@ CYPRESS_correct=true
 CYPRESS_FRIENDLY_GREETING=Hello
 ```
 
-Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`
+Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`. Note: an empty value is converted to `undefined`.
+
+```
+CYPRESS_age=
+# will produce
+{ age: undefined }
+```
+
+If you really want to skip a value, prefix it somehow, like `xCYPRESS_...=value`
 
 ## Aliases
 

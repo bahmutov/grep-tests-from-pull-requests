@@ -42,6 +42,10 @@ describe('cast', () => {
   it('leaves strings unchanged', () => {
     expect(cast('hello there')).to.equal('hello there')
   })
+
+  it('converts an empty string to undefined', () => {
+    expect(cast('')).to.be.undefined
+  })
 })
 
 describe('getCypressEnvVariable', () => {
@@ -66,6 +70,14 @@ describe('getCypressEnvVariable', () => {
     expect(getCypressEnvVariable(s)).to.deep.eq({
       key: 'correct',
       value: true,
+    })
+  })
+
+  it('returns undefined value', () => {
+    const s = 'CYPRESS_flag='
+    expect(getCypressEnvVariable(s)).to.deep.equal({
+      key: 'flag',
+      value: undefined,
     })
   })
 
