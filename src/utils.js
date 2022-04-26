@@ -1,5 +1,5 @@
 // @ts-check
-const { getBaseUrlFromTextLine } = require('./universal')
+const { getBaseUrlFromTextLine, getCypressEnvVariable } = require('./universal')
 const got = require('got')
 const debug = require('debug')('grep-tests-from-pull-requests')
 
@@ -120,6 +120,8 @@ function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
     all: false,
     tags: [],
     baseUrl: null,
+    // additional environment variables to set found in the text
+    env: {},
   }
 
   if (!tagsToLookFor || !tagsToLookFor.length) {
@@ -139,6 +141,12 @@ function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
     if (foundUrl) {
       debug('found base url: %s', foundUrl)
       testsToRun.baseUrl = foundUrl
+    } else {
+      const envVariable = getCypressEnvVariable(line)
+      if (envVariable && 'key' in envVariable && 'value' in envVariable) {
+        debug('found env variable: %s', envVariable)
+        testsToRun.env[envVariable.key] = envVariable.value
+      }
     }
 
     tagsToLookFor.forEach((tag) => {

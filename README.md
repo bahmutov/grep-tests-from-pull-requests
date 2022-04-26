@@ -107,6 +107,18 @@ if (testsToRun) {
 }
 ```
 
+## Additional environment variables
+
+If the pull request has lines that start with `CYPRESS_...=value` then they are automatically are parsed and cast and added to the `Cypress.env` object. For example
+
+```
+CYPRESS_num=1
+CYPRESS_correct=true
+CYPRESS_FRIENDLY_GREETING=Hello
+```
+
+Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`
+
 ## Aliases
 
 This package includes several scripts that let you find the pull request body and the test tags and the base URL of a given pull request.
