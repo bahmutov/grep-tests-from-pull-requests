@@ -34,7 +34,7 @@ function cast(str) {
 }
 
 function getCypressEnvVariable(line) {
-  if (line.match(/^\s*CYPRESS_/)) {
+  if (line.match(/^CYPRESS_/)) {
     const values = line.split('CYPRESS_')[1].trim()
     const [key, valueString] = values.split('=')
     const value = cast(valueString)

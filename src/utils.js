@@ -143,9 +143,9 @@ function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
       testsToRun.baseUrl = foundUrl
     } else {
       const envVariable = getCypressEnvVariable(line)
-      if (envVariable) {
+      if (envVariable && 'key' in envVariable && 'value' in envVariable) {
         debug('found env variable: %s', envVariable)
-        testsToRun.env[envVariable.name] = envVariable.value
+        testsToRun.env[envVariable.key] = envVariable.value
       }
     }
 
