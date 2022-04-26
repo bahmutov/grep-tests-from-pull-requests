@@ -17,4 +17,33 @@ function getBaseUrlFromTextLine(line) {
   // did not find the base url
 }
 
-module.exports = { getBaseUrlFromTextLine }
+function cast(str) {
+  if (str === 'true') {
+    return true
+  }
+  if (str === 'false') {
+    return false
+  }
+  const n = Number(str)
+  if (!isNaN(n)) {
+    return n
+  }
+
+  // return the original string
+  return str
+}
+
+function getCypressEnvVariable(line) {
+  if (line.match(/^\s*CYPRESS_/)) {
+    const values = line.split('CYPRESS_')[1].trim()
+    const [key, valueString] = values.split('=')
+    const value = cast(valueString)
+    return {
+      key,
+      value,
+    }
+  }
+  // did not find Cypress variable
+}
+
+module.exports = { getBaseUrlFromTextLine, getCypressEnvVariable, cast }
