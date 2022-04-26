@@ -18,6 +18,10 @@ function getBaseUrlFromTextLine(line) {
 }
 
 function cast(str) {
+  if (typeof str === 'undefined' || str === '') {
+    return undefined
+  }
+
   if (str === 'true') {
     return true
   }
