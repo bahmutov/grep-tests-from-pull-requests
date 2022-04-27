@@ -8,6 +8,7 @@ import {
   shouldRunCypressTests,
   cast,
   findTestsToRun,
+  parsePullRequestUrl,
 } from '../../src/universal'
 
 describe('getBaseUrlFromTextLine', () => {
@@ -136,5 +137,24 @@ describe('findTestsToRun', () => {
         tags,
       })
     })
+  })
+})
+
+describe('parsePullRequestUrl', () => {
+  it('parses pull request url', () => {
+    const parsed = parsePullRequestUrl(
+      'https://github.com/bahmutov/todomvc-tests-circleci/pull/15',
+    )
+    expect(parsed).to.deep.equal({
+      owner: 'bahmutov',
+      repo: 'todomvc-tests-circleci',
+      pull: 15,
+    })
+  })
+
+  it('throws for invalid URL', () => {
+    expect(() => {
+      parsePullRequestUrl('github.com/foo/bar')
+    }).to.throw
   })
 })

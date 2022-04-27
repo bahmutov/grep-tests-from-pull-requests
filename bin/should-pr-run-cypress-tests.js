@@ -3,13 +3,17 @@
 const debug = require('debug')('grep-tests-from-pull-requests')
 const arg = require('arg')
 const { getPullRequestNumber, getPullRequestBody } = require('../src/utils')
-const { findTestsToRun } = require('../src/universal')
+const { findTestsToRun, parsePullRequestUrl } = require('../src/universal')
 
 const args = arg({
   '--owner': String,
   '--repo': String,
   '--pull': Number,
   '--commit': String,
+  // the full pull request URL like
+  // https://github.com/bahmutov/todomvc-tests-circleci/pull/15
+  // can replace the individual arguments
+  '--pr-url': String,
 
   // aliases
   '-o': '--owner',
@@ -36,6 +40,15 @@ const options = {
   pull: args['--pull'],
   commit: args['--commit'],
 }
+
+if (args['--pr-url']) {
+  const parsed = parsePullRequestUrl(args['--pr-url'])
+  debug('parsed url %s to %o', args['--pr-url'], parsed)
+  if (parsed) {
+    Object.assign(options, parsed)
+  }
+}
+
 const envOptions = {
   token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
 }
