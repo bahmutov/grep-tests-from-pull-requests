@@ -60,7 +60,8 @@ getPullRequestNumber(
 
     const body = await getPullRequestBody(options, envOptions)
     const prComments = await getPullRequestComments(options, envOptions)
-    const testsToRun = getTestsToRun(['@log', '@sanity'], body, prComments)
+    const tags = ['@log', '@sanity']
+    const testsToRun = getTestsToRun(body, tags, prComments)
     console.log('tests to run')
     console.log(testsToRun)
   })
