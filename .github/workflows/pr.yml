@@ -73,7 +73,7 @@ jobs:
       - name: Print PR URL should run Cypress tests 🖨
         run: |
           if node ./bin/should-pr-run-cypress-tests.js \
-            --pr-url ${{ github.event.html_url }}; then
+            --pr-url ${{ github.event.pull_request.html_url }}; then
             echo "We should run Cypress tests ✅"
           else
             echo "We should skip Cypress tests 😔"
