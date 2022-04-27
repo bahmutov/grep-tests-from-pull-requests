@@ -145,10 +145,28 @@ function isLineChecked(line) {
   return line.includes('[x]')
 }
 
+function parsePullRequestUrl(url) {
+  if (!url.startsWith('https://github.com')) {
+    throw new Error(`invalid url ${url}`)
+  }
+
+  if (!url.includes('/pull/')) {
+    throw new Error(`invalid url without pull ${url}`)
+  }
+
+  const split = url.split('/')
+  return {
+    owner: split[3],
+    repo: split[4],
+    pull: cast(split[6]),
+  }
+}
+
 module.exports = {
   getBaseUrlFromTextLine,
   getCypressEnvVariable,
   cast,
   shouldRunCypressTests,
   findTestsToRun,
+  parsePullRequestUrl,
 }

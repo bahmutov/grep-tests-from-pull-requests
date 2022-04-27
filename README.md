@@ -173,6 +173,14 @@ $ echo $?
 # 0 - we need to run the Cypress tests
 ```
 
+**Tip:** you can pass the full GitHub pull request URL instead of passing the individual command line arguments
+
+```
+$ npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 15
+# is the same as
+$ npx should-pr-run-cypress-tests --pr-url https://github.com/bahmutov/todomvc-tests-circleci/pull/15
+```
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.

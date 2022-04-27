@@ -69,3 +69,14 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print PR URL should run Cypress tests 🖨
+        run: |
+          if node ./bin/should-pr-run-cypress-tests.js \
+            --pr-url ${{ github.event.html_url }}; then
+            echo "We should run Cypress tests ✅"
+          else
+            echo "We should skip Cypress tests 😔"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
