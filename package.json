@@ -14,7 +14,8 @@
   "bin": {
     "get-pr-body": "./bin/get-pr-body.js",
     "get-pr-comments": "./bin/get-pr-comments.js",
-    "get-pr-tests": "./bin/get-pr-tests.js"
+    "get-pr-tests": "./bin/get-pr-tests.js",
+    "should-pr-run-cypress-tests": "./bin/should-pr-run-cypress-tests.js"
   },
   "repository": {
     "type": "git",

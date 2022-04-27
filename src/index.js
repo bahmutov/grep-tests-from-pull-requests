@@ -62,7 +62,7 @@ async function registerPlugin(on, config, options = {}) {
 
     const prBody = await getPullRequestBody(prOptions, envOptions)
     const prComments = await getPullRequestComments(prOptions, envOptions)
-    const testsToRun = getTestsToRun(options.tags, prBody, prComments)
+    const testsToRun = getTestsToRun(prBody, options.tags, prComments)
     console.log('tests to run', testsToRun)
     if (testsToRun) {
       if (testsToRun.baseUrl) {

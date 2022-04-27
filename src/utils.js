@@ -107,11 +107,11 @@ async function getPullRequestComments(options, envOptions) {
 }
 
 /**
- * @param {string[]} tagsToLookFor String tags to find in the pull request body
  * @param {string} pullRequestBody The pull request text with checkboxes
+ * @param {string[]} tagsToLookFor String tags to find in the pull request body
  * @param {PullRequestComment[]} pullRequestComments The pull request comments
  */
-function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
+function getTestsToRun(pullRequestBody, tagsToLookFor, pullRequestComments) {
   const comments = pullRequestComments.map((comment) => comment.body)
   const testsToRun = findTestsToRun(pullRequestBody, tagsToLookFor, comments)
   return testsToRun

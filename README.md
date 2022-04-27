@@ -163,6 +163,16 @@ Prints all test tags found in the pull request
 $ npx get-pr-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
 ```
 
+### should-pr-run-cypress-tests
+
+Tells if the pull request body has a checkbox to run or skip the Cypress tests. If the tests should run, this script exits with code 0. If the PR disables the Cypress tests, it exits with code 1.
+
+```
+$ npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+$ echo $?
+# 0 - we need to run the Cypress tests
+```
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.

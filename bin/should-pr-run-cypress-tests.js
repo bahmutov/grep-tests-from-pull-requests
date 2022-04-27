@@ -2,7 +2,8 @@
 
 const debug = require('debug')('grep-tests-from-pull-requests')
 const arg = require('arg')
-const { getPullRequestNumber, getPullRequestComments } = require('../src/utils')
+const { getPullRequestNumber, getPullRequestBody } = require('../src/utils')
+const { findTestsToRun } = require('../src/universal')
 
 const args = arg({
   '--owner': String,
@@ -53,17 +54,21 @@ getPullRequestNumber(
 
     options.pull = testPullRequestNumber
 
-    return getPullRequestComments(options, envOptions).then((comments) => {
-      console.log('found %d comments', comments.length)
-      comments.forEach((comment, k) => {
-        console.log('--- comment %d ---', k + 1)
-        console.log(comment.body.trim())
-        console.log()
-      })
+    return getPullRequestBody(options, envOptions).then((body) => {
+      debug(body)
+      const testsToRun = findTestsToRun(body)
+      debug(testsToRun)
+      if (testsToRun.runCypressTests) {
+        console.log('The pull request should run Cypress tests')
+        process.exit(0)
+      } else {
+        console.log('The pull request should skip Cypress tests')
+        process.exit(1)
+      }
     })
   })
 
   .catch((e) => {
     console.error(e)
-    process.exit(1)
+    process.exit(2)
   })
