@@ -14,7 +14,8 @@
   "bin": {
     "get-pr-body": "./bin/get-pr-body.js",
     "get-pr-comments": "./bin/get-pr-comments.js",
-    "get-pr-tests": "./bin/get-pr-tests.js"
+    "get-pr-tests": "./bin/get-pr-tests.js",
+    "should-pr-run-cypress-tests": "./bin/should-pr-run-cypress-tests.js"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,7 @@
   },
   "homepage": "https://github.com/bahmutov/grep-tests-from-pull-requests#readme",
   "devDependencies": {
-    "cypress": "^9.3.1",
+    "cypress": "^9.6.0",
     "cypress-grep": "^2.13.1",
     "prettier": "^2.5.1",
     "semantic-release": "^19.0.2"

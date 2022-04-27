@@ -127,6 +127,14 @@ CYPRESS_age=
 
 If you really want to skip a value, prefix it somehow, like `xCYPRESS_...=value`
 
+## Skip / enable Cypress tests
+
+You can find a checkbox in the pull request text to skip / run Cypress tests. This makes it simple to skip the E2E testing steps temporarily. Include the following checkbox line in the pull request body.
+
+```
+- [x] run Cypress tests
+```
+
 ## Aliases
 
 This package includes several scripts that let you find the pull request body and the test tags and the base URL of a given pull request.
@@ -153,6 +161,16 @@ Prints all test tags found in the pull request
 
 ```
 $ npx get-pr-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+```
+
+### should-pr-run-cypress-tests
+
+Tells if the pull request body has a checkbox to run or skip the Cypress tests. If the tests should run, this script exits with code 0. If the PR disables the Cypress tests, it exits with code 1.
+
+```
+$ npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
+$ echo $?
+# 0 - we need to run the Cypress tests
 ```
 
 ## Debugging

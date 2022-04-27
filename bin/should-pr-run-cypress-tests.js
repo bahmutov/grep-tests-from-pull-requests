@@ -2,12 +2,8 @@
 
 const debug = require('debug')('grep-tests-from-pull-requests')
 const arg = require('arg')
-const {
-  getPullRequestNumber,
-  getPullRequestBody,
-  getPullRequestComments,
-  getTestsToRun,
-} = require('../src/utils')
+const { getPullRequestNumber, getPullRequestBody } = require('../src/utils')
+const { findTestsToRun } = require('../src/universal')
 
 const args = arg({
   '--owner': String,
@@ -51,22 +47,28 @@ getPullRequestNumber(
   options.commit,
   envOptions,
 )
-  .then(async (testPullRequestNumber) => {
+  .then((testPullRequestNumber) => {
     if (isNaN(testPullRequestNumber)) {
       throw new Error('Could not find the pull request number')
     }
 
     options.pull = testPullRequestNumber
 
-    const body = await getPullRequestBody(options, envOptions)
-    const prComments = await getPullRequestComments(options, envOptions)
-    const tags = ['@log', '@sanity']
-    const testsToRun = getTestsToRun(body, tags, prComments)
-    console.log('tests to run')
-    console.log(testsToRun)
+    return getPullRequestBody(options, envOptions).then((body) => {
+      debug(body)
+      const testsToRun = findTestsToRun(body)
+      debug(testsToRun)
+      if (testsToRun.runCypressTests) {
+        console.log('The pull request should run Cypress tests')
+        process.exit(0)
+      } else {
+        console.log('The pull request should skip Cypress tests')
+        process.exit(1)
+      }
+    })
   })
 
   .catch((e) => {
     console.error(e)
-    process.exit(1)
+    process.exit(2)
   })

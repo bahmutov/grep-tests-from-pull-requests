@@ -57,3 +57,15 @@ jobs:
             --pull ${{ github.event.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Print PR should run Cypress tests 🖨
+        run: |
+          if node ./bin/should-pr-run-cypress-tests.js \
+            --owner bahmutov --repo grep-tests-from-pull-requests \
+            --pull ${{ github.event.number }}; then
+            echo "We should run Cypress tests ✅"
+          else
+            echo "We should skip Cypress tests 😔"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

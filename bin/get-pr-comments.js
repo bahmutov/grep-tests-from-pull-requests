@@ -2,11 +2,7 @@
 
 const debug = require('debug')('grep-tests-from-pull-requests')
 const arg = require('arg')
-const {
-  getPullRequestNumber,
-  getPullRequestComments,
-  getTestsToRun,
-} = require('../src/utils')
+const { getPullRequestNumber, getPullRequestComments } = require('../src/utils')
 
 const args = arg({
   '--owner': String,
