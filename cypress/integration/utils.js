@@ -5,7 +5,9 @@ chai.config.truncateThreshold = 200
 import {
   getBaseUrlFromTextLine,
   getCypressEnvVariable,
+  shouldRunCypressTests,
   cast,
+  findTestsToRun,
 } from '../../src/universal'
 
 describe('getBaseUrlFromTextLine', () => {
@@ -84,5 +86,55 @@ describe('getCypressEnvVariable', () => {
   it('returns undefined otherwise', () => {
     const s = 'hello world'
     expect(getCypressEnvVariable(s)).to.be.undefined
+  })
+})
+
+describe('shouldRunCypressTests', () => {
+  it('finds if need to run Cypress tests', () => {
+    expect(shouldRunCypressTests('[x] run Cypress tests')).to.be.true
+    expect(shouldRunCypressTests('- [x] run Cypress tests')).to.be.true
+  })
+
+  it('finds if need to skip Cypress tests', () => {
+    expect(shouldRunCypressTests('[ ] run Cypress tests')).to.be.false
+    expect(shouldRunCypressTests('- [ ] run E2E tests')).to.be.false
+  })
+
+  it('finds no information', () => {
+    expect(shouldRunCypressTests('run Cypress tests')).to.be.undefined
+    expect(shouldRunCypressTests('- [ ] run tests')).to.be.undefined
+  })
+})
+
+describe('findTestsToRun', () => {
+  it('finds all the information without tags', () => {
+    cy.readFile('.github/PULL_REQUEST_TEMPLATE.md').then((body) => {
+      const found = findTestsToRun(body)
+      expect(found).to.deep.equal({
+        all: true,
+        baseUrl: null,
+        env: {
+          num: 1,
+          correct: true,
+          FRIENDLY_GREETING: 'Hello',
+        },
+        runCypressTests: true,
+        tags: [],
+      })
+    })
+  })
+
+  it('finds all the information with tags', () => {
+    cy.fixture('pr-with-tags.md').then((body) => {
+      const tags = ['@sanity', '@quick']
+      const found = findTestsToRun(body, tags)
+      expect(found).to.deep.equal({
+        all: false,
+        baseUrl: 'http://localhost:7777',
+        env: {},
+        runCypressTests: true,
+        tags,
+      })
+    })
   })
 })

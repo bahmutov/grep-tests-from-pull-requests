@@ -1,5 +1,5 @@
 // @ts-check
-const { getBaseUrlFromTextLine, getCypressEnvVariable } = require('./universal')
+const { findTestsToRun } = require('./universal')
 const got = require('got')
 const debug = require('debug')('grep-tests-from-pull-requests')
 
@@ -106,68 +106,14 @@ async function getPullRequestComments(options, envOptions) {
   }
 }
 
-function isLineChecked(line) {
-  return line.includes('[x]')
-}
-
 /**
  * @param {string[]} tagsToLookFor String tags to find in the pull request body
  * @param {string} pullRequestBody The pull request text with checkboxes
  * @param {PullRequestComment[]} pullRequestComments The pull request comments
  */
 function getTestsToRun(tagsToLookFor, pullRequestBody, pullRequestComments) {
-  const testsToRun = {
-    all: false,
-    tags: [],
-    baseUrl: null,
-    // additional environment variables to set found in the text
-    env: {},
-  }
-
-  if (!tagsToLookFor || !tagsToLookFor.length) {
-    debug('no tags to look for, running all tests')
-    testsToRun.all = true
-    return testsToRun
-  }
-  debug('looking for checkboxes with tags: %o', tagsToLookFor)
-
-  const lines = pullRequestBody.split('\n')
-  lines.forEach((line) => {
-    if (line.includes('all tests') && isLineChecked(line)) {
-      testsToRun.all = true
-    }
-
-    const foundUrl = getBaseUrlFromTextLine(line)
-    if (foundUrl) {
-      debug('found base url: %s', foundUrl)
-      testsToRun.baseUrl = foundUrl
-    } else {
-      const envVariable = getCypressEnvVariable(line)
-      if (envVariable && 'key' in envVariable && 'value' in envVariable) {
-        debug('found env variable: %s', envVariable)
-        testsToRun.env[envVariable.key] = envVariable.value
-      }
-    }
-
-    tagsToLookFor.forEach((tag) => {
-      if (line.includes(tag) && isLineChecked(line)) {
-        testsToRun.tags.push(tag)
-      }
-    })
-  })
-
-  // pull requests can overwrite the base url
-  pullRequestComments.forEach((comment) => {
-    const commentLines = comment.body.split('\n')
-    commentLines.forEach((line) => {
-      const foundUrl = getBaseUrlFromTextLine(line)
-      if (foundUrl) {
-        debug('found base url in the comment: %s', foundUrl)
-        testsToRun.baseUrl = foundUrl
-      }
-    })
-  })
-
+  const comments = pullRequestComments.map((comment) => comment.body)
+  const testsToRun = findTestsToRun(pullRequestBody, tagsToLookFor, comments)
   return testsToRun
 }
 
