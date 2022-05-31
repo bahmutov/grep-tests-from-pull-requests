@@ -156,7 +156,7 @@ async function getPullRequestForHeadCommit(options, envOptions) {
   }
 
   // https://docs.github.com/en/rest/reference/pulls#list-pull-requests
-  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/pulls`
+  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/pulls?state=all`
   debug('url: %s', url)
 
   // @ts-ignore
