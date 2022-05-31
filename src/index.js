@@ -90,12 +90,12 @@ async function registerPlugin(on, config, options = {}) {
           delete config.env.grep
           config.env.grepTags = grepTags
         }
+      }
 
-        if (Object.keys(testsToRun.env).length) {
-          console.log('found the following env values in the PR text')
-          console.log('%o', testsToRun.env)
-          Object.assign(config.env, testsToRun.env)
-        }
+      if (Object.keys(testsToRun.env).length) {
+        console.log('found the following env values in the PR text')
+        console.log('%o', testsToRun.env)
+        Object.assign(config.env, testsToRun.env)
       }
     }
 

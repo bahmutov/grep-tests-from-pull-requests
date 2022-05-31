@@ -158,3 +158,18 @@ describe('parsePullRequestUrl', () => {
     }).to.throw
   })
 })
+
+describe('Object.assign', () => {
+  it('overwrites empty strings', () => {
+    const a = {
+      name: '',
+    }
+    const b = {
+      name: 'Joe',
+    }
+    Object.assign(a, b)
+    expect(a).to.deep.equal({
+      name: 'Joe',
+    })
+  })
+})
