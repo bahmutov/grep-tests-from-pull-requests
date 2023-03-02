@@ -84,6 +84,12 @@ async function registerPlugin(on, config, options = {}) {
           console.log('running all tests, removing possible grep options')
           delete config.env.grep
           delete config.env.grepTags
+        }  else if (testsToRun.tags.length && config.env.grepTags.includes('@mobile')) {
+          // if we have passed @mobile tag then we should only run tests that are 
+          // mutually exclusive between @mobile and testsToRun.tags
+          const grepTags = testsToRun.tags.join(',')
+          console.log('grepping by mutulaly exclusive tags "@mobile" and "%s" tags', grepTags)
+          config.env.grepTags.concat(grepTags)
         } else if (testsToRun.tags.length) {
           const grepTags = testsToRun.tags.join(',')
           console.log('grepping by tags "%s"', grepTags)
