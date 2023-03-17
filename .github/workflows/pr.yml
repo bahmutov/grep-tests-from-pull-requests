@@ -21,11 +21,11 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
 
       - name: Checkout 🛎
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run tests 🧪
         # https://github.com/cypress-io/github-action
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           build: npx @bahmutov/print-env GITHUB
           env: 'pullRequest=${{ github.event.number }}'

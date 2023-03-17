@@ -188,10 +188,16 @@ async function getPullRequestForHeadCommit(options, envOptions) {
   return pullRequests[0].number
 }
 
+function cleanUpTags(tags = '') {
+  const cleanTags = Array.isArray(tags) ? tags : tags.split(',')
+  return cleanTags.map((s) => s.trim()).filter(Boolean)
+}
+
 module.exports = {
   getPullRequestBody,
   getPullRequestComments,
   getTestsToRun,
   getPullRequestForHeadCommit,
   getPullRequestNumber,
+  cleanUpTags,
 }
