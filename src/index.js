@@ -43,6 +43,7 @@ async function registerPlugin(on, config, options = {}) {
       testPullRequest,
       testCommit,
       envOptions,
+      options.all,
     )
     if (isNaN(testPullRequestNumber)) {
       throw new Error('Could not find the pull request number')
