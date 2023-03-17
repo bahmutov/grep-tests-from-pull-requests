@@ -7,6 +7,7 @@ const {
   getPullRequestBody,
   getPullRequestComments,
   getTestsToRun,
+  cleanUpTags,
 } = require('../src/utils')
 
 const args = arg({
@@ -14,12 +15,14 @@ const args = arg({
   '--repo': String,
   '--pull': Number,
   '--commit': String,
+  '--tags': String,
 
   // aliases
   '-o': '--owner',
   '-r': '--repo',
   '-p': '--pull',
   '-c': '--commit',
+  '-t': '--tags',
 })
 debug('args: %o', args)
 
@@ -39,6 +42,7 @@ const options = {
   repo: args['--repo'],
   pull: args['--pull'],
   commit: args['--commit'],
+  tags: args['--tags'],
 }
 const envOptions = {
   token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
@@ -60,7 +64,8 @@ getPullRequestNumber(
 
     const body = await getPullRequestBody(options, envOptions)
     const prComments = await getPullRequestComments(options, envOptions)
-    const tags = ['@log', '@sanity']
+    const tags = cleanUpTags(options.tags) || []
+    debug('cleaned up tags %o', tags)
     const testsToRun = getTestsToRun(body, tags, prComments)
     console.log('tests to run')
     console.log(testsToRun)

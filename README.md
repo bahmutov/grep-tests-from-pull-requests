@@ -163,6 +163,13 @@ Prints all test tags found in the pull request
 $ npx get-pr-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12
 ```
 
+You can pass the list of allowed tags
+
+```
+$ npx get-pr-tests --owner bahmutov --repo todomvc-no-tests-vercel --pull 12 \
+  --tags one,two,three
+```
+
 ### should-pr-run-cypress-tests
 
 Tells if the pull request body has a checkbox to run or skip the Cypress tests. If the tests should run, this script exits with code 0. If the PR disables the Cypress tests, it exits with code 1.
