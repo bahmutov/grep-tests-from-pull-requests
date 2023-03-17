@@ -14,12 +14,14 @@ const args = arg({
   // https://github.com/bahmutov/todomvc-tests-circleci/pull/15
   // can replace the individual arguments
   '--pr-url': String,
+  '--all': String,
 
   // aliases
   '-o': '--owner',
   '-r': '--repo',
   '-p': '--pull',
   '-c': '--commit',
+  '-a': '--all',
 })
 debug('args: %o', args)
 
@@ -39,6 +41,7 @@ const options = {
   repo: args['--repo'],
   pull: args['--pull'],
   commit: args['--commit'],
+  all: args['--all'],
 }
 
 if (args['--pr-url']) {
@@ -59,6 +62,7 @@ getPullRequestNumber(
   options.pull,
   options.commit,
   envOptions,
+  options.all,
 )
   .then((testPullRequestNumber) => {
     if (isNaN(testPullRequestNumber)) {

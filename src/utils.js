@@ -123,6 +123,7 @@ async function getPullRequestNumber(
   testPullRequest,
   commit,
   envOptions,
+  all = false,
 ) {
   if (testPullRequest) {
     debug('known pull request, returning %s', testPullRequest)
@@ -134,7 +135,7 @@ async function getPullRequestNumber(
   }
 
   const number = await getPullRequestForHeadCommit(
-    { owner, repo, commit },
+    { owner, repo, commit, all },
     envOptions,
   )
   return number
@@ -156,7 +157,9 @@ async function getPullRequestForHeadCommit(options, envOptions) {
   }
 
   // https://docs.github.com/en/rest/reference/pulls#list-pull-requests
-  const url = `https://api.github.com/repos/${options.owner}/${options.repo}/pulls?state=all`
+  const url =
+    `https://api.github.com/repos/${options.owner}/${options.repo}/pulls` +
+    (options.all ? '?state=all' : '')
   debug('url: %s', url)
 
   // @ts-ignore

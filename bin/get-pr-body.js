@@ -13,12 +13,14 @@ const args = arg({
   '--repo': String,
   '--pull': Number,
   '--commit': String,
+  '--all': String,
 
   // aliases
   '-o': '--owner',
   '-r': '--repo',
   '-p': '--pull',
   '-c': '--commit',
+  '-a': '--all',
 })
 debug('args: %o', args)
 
@@ -38,6 +40,7 @@ const options = {
   repo: args['--repo'],
   pull: args['--pull'],
   commit: args['--commit'],
+  all: args['--all'],
 }
 const envOptions = {
   token: process.env.GITHUB_TOKEN || process.env.PERSONAL_GH_TOKEN,
@@ -49,6 +52,7 @@ getPullRequestNumber(
   options.pull,
   options.commit,
   envOptions,
+  options.all,
 )
   .then((testPullRequestNumber) => {
     if (isNaN(testPullRequestNumber)) {

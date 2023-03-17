@@ -188,6 +188,10 @@ $ npx should-pr-run-cypress-tests --owner bahmutov --repo todomvc-no-tests-verce
 $ npx should-pr-run-cypress-tests --pr-url https://github.com/bahmutov/todomvc-tests-circleci/pull/15
 ```
 
+## Open vs all pull requests
+
+By default this library gets the pull request that is `open`. If you want to fetch the info from a closed pull request, use an option `all`. For example, the bin scripts accept `--all` argument to fetch all pull requests when searching for specific one.
+
 ## Debugging
 
 This plugin uses [debug](https://github.com/debug-js/debug#readme) module to output verbose log messages. Run with environment variable `DEBUG=grep-tests-from-pull-requests` to see those logs.
