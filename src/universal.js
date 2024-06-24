@@ -77,13 +77,24 @@ function shouldRunCypressTests(line) {
   // if the user wants to run Cypress tests
 }
 
+/**
+ * @typedef {Object} TestsToRun
+ * @property {boolean} all - if true, run all tests
+ * @property {string[]} tags - list of test tags to run
+ * @property {string|null} baseUrl - base URL to use
+ * @property {Object<string, string|number|boolean>} env - additional environment variables to set
+ * @property {boolean} runCypressTests - if true, run Cypress tests. True by default
+*/
+
 function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
+  /** @type TestsToRun */
   const testsToRun = {
     all: false,
     tags: [],
     baseUrl: null,
     // additional environment variables to set found in the text
     env: {},
+    runCypressTests: true
   }
 
   const lines = pullRequestBody.split('\n')
