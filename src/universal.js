@@ -186,13 +186,24 @@ function findAdditionalSpecsToRun(lines) {
     lines = lines.split('\n')
   }
 
+  let done = false
   const additionalSpecs = []
   const startMarker = 'Run these Cypress specs too:'
 
   lines.forEach((line, k) => {
+    if (done) {
+      return
+    }
+
     if (line.includes(startMarker)) {
+      // we found the list of specs
+      done = true
       for (let i = k + 1; i < lines.length; i++) {
         const maybeSpecLine = lines[i].trim()
+        if (maybeSpecLine === '-') {
+          continue
+        }
+
         if (maybeSpecLine.startsWith('- ')) {
           const cleanedUp = maybeSpecLine.slice(2).replaceAll('`', '')
           if (cleanedUp) {

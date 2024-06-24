@@ -189,6 +189,23 @@ describe('findAdditionalSpecsToRun', () => {
     const specs = findAdditionalSpecsToRun(body)
     expect(specs).to.deep.equal(['spec.cy.ts'])
   })
+
+  it('ignores more empty lines', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      -
+      - spec.cy.ts
+      -
+      - spec2.cy.ts
+
+      more text here
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['spec.cy.ts', 'spec2.cy.ts'])
+  })
 })
 
 describe('findTestsToRun', () => {
