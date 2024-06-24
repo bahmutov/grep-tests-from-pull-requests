@@ -11,3 +11,7 @@ Please pick all tests you would like to run against this pull request
 Run the tests against this URL
 
 baseUrl http://localhost:7777
+
+Run these Cypress specs too:
+
+- `cypress/e2e/spec-b.cy.js`

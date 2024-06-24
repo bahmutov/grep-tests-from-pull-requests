@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-chai.config.truncateThreshold = 200
+chai.config.truncateThreshold = 500
 
 import {
   getBaseUrlFromTextLine,
@@ -9,6 +9,7 @@ import {
   cast,
   findTestsToRun,
   parsePullRequestUrl,
+  findAdditionalSpecsToRun
 } from '../../src/universal'
 
 describe('getBaseUrlFromTextLine', () => {
@@ -107,6 +108,65 @@ describe('shouldRunCypressTests', () => {
   })
 })
 
+describe('findAdditionalSpecsToRun', () => {
+  it('finds a few lines', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      - cypress/e2e/spec-b.cy.js
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js'])
+  })
+
+  it('stops after the list', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      - cypress/e2e/spec-b.cy.js
+      - cypress/e2e/spec-c.cy.js
+
+      more text here
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/spec-c.cy.js'])
+  })
+
+  it('allows wildcards', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      - cypress/e2e/spec-b.cy.js
+      - cypress/e2e/**.cy.js
+
+      more text here
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**.cy.js'])
+  })
+
+  it('removes back ticks', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      - \`cypress/e2e/spec-b.cy.js\`
+      - \`cypress/e2e/**.cy.js\`
+
+      more text here
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**.cy.js'])
+  })
+})
+
 describe('findTestsToRun', () => {
   it('finds all the information without tags', () => {
     cy.readFile('.github/PULL_REQUEST_TEMPLATE.md').then((body) => {
@@ -121,6 +181,7 @@ describe('findTestsToRun', () => {
         },
         runCypressTests: true,
         tags: [],
+        additionalSpecs: [ 'cypress/e2e/spec-b.cy.js', 'cypress/e2e/**/*.cy.js']
       })
     })
   })
@@ -135,6 +196,7 @@ describe('findTestsToRun', () => {
         env: {},
         runCypressTests: true,
         tags,
+        additionalSpecs: ['cypress/e2e/spec-b.cy.js']
       })
     })
   })
