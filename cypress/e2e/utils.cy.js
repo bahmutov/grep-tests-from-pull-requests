@@ -9,7 +9,7 @@ import {
   cast,
   findTestsToRun,
   parsePullRequestUrl,
-  findAdditionalSpecsToRun
+  findAdditionalSpecsToRun,
 } from '../../src/universal'
 
 describe('getBaseUrlFromTextLine', () => {
@@ -133,7 +133,10 @@ describe('findAdditionalSpecsToRun', () => {
       more text here
     `
     const specs = findAdditionalSpecsToRun(body)
-    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/spec-c.cy.js'])
+    expect(specs).to.deep.equal([
+      'cypress/e2e/spec-b.cy.js',
+      'cypress/e2e/spec-c.cy.js',
+    ])
   })
 
   it('allows wildcards', () => {
@@ -148,7 +151,10 @@ describe('findAdditionalSpecsToRun', () => {
       more text here
     `
     const specs = findAdditionalSpecsToRun(body)
-    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**.cy.js'])
+    expect(specs).to.deep.equal([
+      'cypress/e2e/spec-b.cy.js',
+      'cypress/e2e/**.cy.js',
+    ])
   })
 
   it('removes back ticks', () => {
@@ -163,7 +169,25 @@ describe('findAdditionalSpecsToRun', () => {
       more text here
     `
     const specs = findAdditionalSpecsToRun(body)
-    expect(specs).to.deep.equal(['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**.cy.js'])
+    expect(specs).to.deep.equal([
+      'cypress/e2e/spec-b.cy.js',
+      'cypress/e2e/**.cy.js',
+    ])
+  })
+
+  it('ignores empty lines', () => {
+    const body = `
+      # PR
+
+      Run these Cypress specs too:
+
+      -
+      - spec.cy.ts
+
+      more text here
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['spec.cy.ts'])
   })
 })
 
@@ -181,7 +205,7 @@ describe('findTestsToRun', () => {
         },
         runCypressTests: true,
         tags: [],
-        additionalSpecs: [ 'cypress/e2e/spec-b.cy.js', 'cypress/e2e/**/*.cy.js']
+        additionalSpecs: ['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**/*.cy.js'],
       })
     })
   })
@@ -196,7 +220,7 @@ describe('findTestsToRun', () => {
         env: {},
         runCypressTests: true,
         tags,
-        additionalSpecs: ['cypress/e2e/spec-b.cy.js']
+        additionalSpecs: ['cypress/e2e/spec-b.cy.js'],
       })
     })
   })

@@ -85,7 +85,7 @@ function shouldRunCypressTests(line) {
  * @property {Object<string, string|number|boolean>} env - additional environment variables to set
  * @property {boolean} runCypressTests - if true, run Cypress tests. True by default
  * @property {string[]} additionalSpecs - additional Cypress specs to run
-*/
+ */
 
 function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
   /** @type TestsToRun */
@@ -96,7 +96,7 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
     // additional environment variables to set found in the text
     env: {},
     runCypressTests: true,
-    additionalSpecs: []
+    additionalSpecs: [],
   }
 
   const lines = pullRequestBody.split('\n')
@@ -180,7 +180,7 @@ function parsePullRequestUrl(url) {
 
 /**
  * @param {string|string[]} lines PR text lines separately
-*/
+ */
 function findAdditionalSpecsToRun(lines) {
   if (typeof lines === 'string') {
     lines = lines.split('\n')
@@ -195,7 +195,9 @@ function findAdditionalSpecsToRun(lines) {
         const maybeSpecLine = lines[i].trim()
         if (maybeSpecLine.startsWith('- ')) {
           const cleanedUp = maybeSpecLine.slice(2).replaceAll('`', '')
-          additionalSpecs.push(cleanedUp)
+          if (cleanedUp) {
+            additionalSpecs.push(cleanedUp)
+          }
         } else if (additionalSpecs.length) {
           // finished with the list of specs
           break
@@ -213,5 +215,5 @@ module.exports = {
   shouldRunCypressTests,
   findTestsToRun,
   parsePullRequestUrl,
-  findAdditionalSpecsToRun
+  findAdditionalSpecsToRun,
 }
