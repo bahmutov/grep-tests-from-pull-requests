@@ -21,4 +21,13 @@ And another value
 
 CYPRESS_FRIENDLY_GREETING=Hello
 
-The 3 above values should be available under `num`, `correct`, and `FRIENDLY_GREETING` names
+The 3 above values should be available under `num`, `correct`, and `FRIENDLY_GREETING` names.
+
+Here you can specify a list of Cypress specs to run:
+
+Run these Cypress specs too:
+
+- cypress/e2e/spec-b.cy.js
+- `cypress/e2e/**/*.cy.js`
+
+Back ticks are removed.

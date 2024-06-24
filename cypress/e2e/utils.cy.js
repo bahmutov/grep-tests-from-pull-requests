@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-chai.config.truncateThreshold = 200
+chai.config.truncateThreshold = 500
 
 import {
   getBaseUrlFromTextLine,
@@ -181,7 +181,7 @@ describe('findTestsToRun', () => {
         },
         runCypressTests: true,
         tags: [],
-        additionalSpecs: []
+        additionalSpecs: [ 'cypress/e2e/spec-b.cy.js', 'cypress/e2e/**/*.cy.js']
       })
     })
   })
