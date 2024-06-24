@@ -84,6 +84,7 @@ function shouldRunCypressTests(line) {
  * @property {string|null} baseUrl - base URL to use
  * @property {Object<string, string|number|boolean>} env - additional environment variables to set
  * @property {boolean} runCypressTests - if true, run Cypress tests. True by default
+ * @property {string[]} additionalSpecs - additional Cypress specs to run
 */
 
 function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
@@ -94,7 +95,8 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
     baseUrl: null,
     // additional environment variables to set found in the text
     env: {},
-    runCypressTests: true
+    runCypressTests: true,
+    additionalSpecs: []
   }
 
   const lines = pullRequestBody.split('\n')
@@ -116,6 +118,9 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
       }
     }
   })
+
+  const additionalSpecs = findAdditionalSpecsToRun(lines)
+  testsToRun.additionalSpecs = additionalSpecs
 
   // pull requests can overwrite the base url
   comments.forEach((comment) => {
@@ -173,6 +178,34 @@ function parsePullRequestUrl(url) {
   }
 }
 
+/**
+ * @param {string|string[]} lines PR text lines separately
+*/
+function findAdditionalSpecsToRun(lines) {
+  if (typeof lines === 'string') {
+    lines = lines.split('\n')
+  }
+
+  const additionalSpecs = []
+  const startMarker = 'Run these Cypress specs too:'
+
+  lines.forEach((line, k) => {
+    if (line.includes(startMarker)) {
+      for (let i = k + 1; i < lines.length; i++) {
+        const maybeSpecLine = lines[i].trim()
+        if (maybeSpecLine.startsWith('- ')) {
+          const cleanedUp = maybeSpecLine.slice(2).replaceAll('`', '')
+          additionalSpecs.push(cleanedUp)
+        } else if (additionalSpecs.length) {
+          // finished with the list of specs
+          break
+        }
+      }
+    }
+  })
+  return additionalSpecs
+}
+
 module.exports = {
   getBaseUrlFromTextLine,
   getCypressEnvVariable,
@@ -180,4 +213,5 @@ module.exports = {
   shouldRunCypressTests,
   findTestsToRun,
   parsePullRequestUrl,
+  findAdditionalSpecsToRun
 }

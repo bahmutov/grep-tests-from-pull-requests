@@ -86,6 +86,17 @@ const pullOptions = {
 await pickTestsFromPullRequest(on, config, pullOptions)
 ```
 
+## additionalSpecs
+
+Sometimes you want to be explicit and run some specs by name or wildcard. Simply add a list of such specs:
+
+    Run these Cypress specs too:
+
+    - `cypress/e2e/spec-b.cy.js`
+    - cypress/e2e/**/*.cy.js
+
+The entire list will be returned in the property `additionalSpecs`. Back ticks will be removed.
+
 ## Resolved value
 
 The function might resolve with an object if the pull request was found. You can check if the user wants to run all the tests, or a list of tags
