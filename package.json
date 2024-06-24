@@ -34,7 +34,7 @@
     "cypress": "13.12.0",
     "cypress-grep": "^2.13.1",
     "prettier": "^2.5.1",
-    "semantic-release": "^19.0.2"
+    "semantic-release": "^24.0.0"
   },
   "dependencies": {
     "arg": "^5.0.1",
