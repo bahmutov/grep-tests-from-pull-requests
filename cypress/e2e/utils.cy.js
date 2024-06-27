@@ -11,6 +11,7 @@ import {
   parsePullRequestUrl,
   findAdditionalSpecsToRun,
 } from '../../src/universal'
+import { stripIndent } from 'common-tags'
 
 describe('getBaseUrlFromTextLine', () => {
   it('finds baseUrl', () => {
@@ -205,6 +206,33 @@ describe('findAdditionalSpecsToRun', () => {
     `
     const specs = findAdditionalSpecsToRun(body)
     expect(specs).to.deep.equal(['spec.cy.ts', 'spec2.cy.ts'])
+  })
+
+  it('ignores other checkboxes', () => {
+    const body = stripIndent`
+      Run these Cypress specs too:
+
+      -
+
+      there is a checkbox
+
+      - [ ] re-run the tests
+
+      ## some header
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal([])
+  })
+
+  it('works without empty lines', () => {
+    const body = stripIndent`
+      Run these Cypress specs too:
+      - one.js
+      - two.js
+      ## some header
+    `
+    const specs = findAdditionalSpecsToRun(body)
+    expect(specs).to.deep.equal(['one.js', 'two.js'])
   })
 })
 
