@@ -138,6 +138,13 @@ CYPRESS_age=
 
 If you really want to skip a value, prefix it somehow, like `xCYPRESS_...=value`
 
+If the string value is a valid JSON, it is automatically parsed
+
+```
+CYPRESS_person={"name":"Joe"}
+// produces Cypress.env('person') object { name: 'Joe' }
+```
+
 ## Skip / enable Cypress tests
 
 You can find a checkbox in the pull request text to skip / run Cypress tests. This makes it simple to skip the E2E testing steps temporarily. Include the following checkbox line in the pull request body.
