@@ -37,6 +37,13 @@ function cast(str) {
     return n
   }
 
+  try {
+    const parsed = JSON.parse(str)
+    return parsed
+  } catch (e) {
+    // do nothing if JSON parsing fails
+  }
+
   // return the original string
   return str
 }

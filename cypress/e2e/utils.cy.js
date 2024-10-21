@@ -51,6 +51,10 @@ describe('cast', () => {
   it('converts an empty string to undefined', () => {
     expect(cast('')).to.be.undefined
   })
+
+  it('parses json objects', () => {
+    expect(cast('{"name":"Joe"}')).to.deep.equal({ name: 'Joe' })
+  })
 })
 
 describe('getCypressEnvVariable', () => {
