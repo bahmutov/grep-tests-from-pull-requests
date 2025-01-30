@@ -236,6 +236,15 @@ function findAdditionalSpecsToRun(lines) {
   return additionalSpecs
 }
 
+function combineEnvOptions(configEnv, parsedEnv) {
+  Object.keys(parsedEnv).forEach((key) => {
+    const value = parsedEnv[key]
+    if (typeof value !== 'undefined') {
+      configEnv[key] = value
+    }
+  })
+}
+
 module.exports = {
   getBaseUrlFromTextLine,
   getCypressEnvVariable,
@@ -244,4 +253,5 @@ module.exports = {
   findTestsToRun,
   parsePullRequestUrl,
   findAdditionalSpecsToRun,
+  combineEnvOptions,
 }

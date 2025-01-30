@@ -10,6 +10,7 @@ import {
   findTestsToRun,
   parsePullRequestUrl,
   findAdditionalSpecsToRun,
+  combineEnvOptions,
 } from '../../src/universal'
 import { stripIndent } from 'common-tags'
 
@@ -328,8 +329,8 @@ describe('parsePullRequestUrl', () => {
   })
 })
 
-describe('Object.assign', () => {
-  it('overwrites empty strings', () => {
+describe('combineEnvOptions', () => {
+  it('Object.assign overwrites empty strings', () => {
     const a = {
       name: '',
     }
@@ -339,6 +340,45 @@ describe('Object.assign', () => {
     Object.assign(a, b)
     expect(a).to.deep.equal({
       name: 'Joe',
+    })
+  })
+
+  it('Object.assign overwrites values with undefined', () => {
+    const a = {
+      name: 'Joe',
+    }
+    const b = {
+      name: undefined,
+    }
+    Object.assign(a, b)
+    expect(a).to.deep.equal({
+      name: undefined,
+    })
+  })
+
+  it('skips undefined values', () => {
+    const a = {
+      name: 'Joe',
+    }
+    const b = {
+      name: undefined,
+    }
+    combineEnvOptions(a, b)
+    expect(a).to.deep.equal({
+      name: 'Joe',
+    })
+  })
+
+  it('overwrites with a null values', () => {
+    const a = {
+      name: 'Joe',
+    }
+    const b = {
+      name: null,
+    }
+    combineEnvOptions(a, b)
+    expect(a).to.deep.equal({
+      name: null,
     })
   })
 })

@@ -7,6 +7,7 @@ const {
   getTestsToRun,
   getPullRequestNumber,
 } = require('./utils')
+const { combineEnvOptions } = require('./universal')
 
 /**
  * @param {Cypress.PluginEvents} on Function for registering event handlers
@@ -97,7 +98,7 @@ async function registerPlugin(on, config, options = {}) {
       if (Object.keys(testsToRun.env).length) {
         console.log('found the following env values in the PR text')
         console.log('%o', testsToRun.env)
-        Object.assign(config.env, testsToRun.env)
+        combineEnvOptions(config.env, testsToRun.env)
       }
     }
 
