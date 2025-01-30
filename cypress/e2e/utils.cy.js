@@ -82,11 +82,27 @@ describe('getCypressEnvVariable', () => {
     })
   })
 
+  it('returns null value', () => {
+    const s = 'CYPRESS_flag=null'
+    expect(getCypressEnvVariable(s)).to.deep.equal({
+      key: 'flag',
+      value: null,
+    })
+  })
+
   it('returns undefined value', () => {
     const s = 'CYPRESS_flag='
     expect(getCypressEnvVariable(s)).to.deep.equal({
       key: 'flag',
       value: undefined,
+    })
+  })
+
+  it('returns a parsed object', () => {
+    const s = 'CYPRESS_person={"name":"Joe"}'
+    expect(getCypressEnvVariable(s)).to.deep.equal({
+      key: 'person',
+      value: { name: 'Joe' },
     })
   })
 
