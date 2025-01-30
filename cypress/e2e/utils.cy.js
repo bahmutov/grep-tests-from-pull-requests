@@ -275,6 +275,24 @@ describe('findTestsToRun', () => {
     })
   })
 
+  it('reads the undefined and null values', () => {
+    cy.fixture('env-with-nulls-and-undefined.md')
+      .then(findTestsToRun)
+      .should('deep.equal', {
+        all: true,
+        tags: [],
+        baseUrl: null,
+        runCypressTests: true,
+        additionalSpecs: [],
+        // parses null and undefined values
+        env: {
+          person: { age: 42 },
+          name: null,
+          flag: undefined,
+        },
+      })
+  })
+
   it('finds all the information with tags', () => {
     cy.fixture('pr-with-tags.md').then((body) => {
       const tags = ['@sanity', '@quick']

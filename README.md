@@ -128,15 +128,7 @@ CYPRESS_correct=true
 CYPRESS_FRIENDLY_GREETING=Hello
 ```
 
-Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`. Note: an empty value is converted to `undefined`.
-
-```
-CYPRESS_age=
-# will produce
-{ age: undefined }
-```
-
-If you really want to skip a value, prefix it somehow, like `xCYPRESS_...=value`
+Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`.
 
 If the string value is a valid JSON, it is automatically parsed
 
@@ -144,6 +136,19 @@ If the string value is a valid JSON, it is automatically parsed
 CYPRESS_person={"name":"Joe"}
 // produces Cypress.env('person') object { name: 'Joe' }
 ```
+
+**Note:** an empty value is converted to `undefined`. The `undefined` value will NOT replace any existing config `env` values.
+
+```
+# pull request text
+CYPRESS_age=
+# will produce
+{ age: undefined }
+# you are running with command "CYPRESS_age=42 npx cypress run ...`
+# the final config env object will have "age: 42"
+```
+
+If you really want to skip a value, prefix it somehow, like `xCYPRESS_...=value` or set it to `null` like this `CYPRESS_age=null`
 
 ## Skip / enable Cypress tests
 
