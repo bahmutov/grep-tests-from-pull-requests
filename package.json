@@ -32,7 +32,7 @@
   "homepage": "https://github.com/bahmutov/grep-tests-from-pull-requests#readme",
   "devDependencies": {
     "common-tags": "^1.8.2",
-    "cypress": "13.15.0",
+    "cypress": "14.0.1",
     "cypress-grep": "^2.13.1",
     "prettier": "^3.3.2",
     "semantic-release": "^24.0.0"
