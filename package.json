@@ -4,7 +4,7 @@
   "description": "Grabs the test tags to run from the pull request text",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "cypress run",
     "semantic-release": "semantic-release",
     "cy:open": "cypress open"
   },

@@ -92,6 +92,7 @@ function shouldRunCypressTests(line) {
  * @property {Object<string, string|number|boolean>} env - additional environment variables to set
  * @property {boolean} runCypressTests - if true, run Cypress tests. True by default
  * @property {string[]} additionalSpecs - additional Cypress specs to run
+ * @property {string[]} pagesToTest - additional URLs to test
  */
 
 function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
@@ -104,6 +105,7 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
     env: {},
     runCypressTests: true,
     additionalSpecs: [],
+    pagesToTest: [],
   }
 
   const lines = pullRequestBody.split('\n')
@@ -128,6 +130,9 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
 
   const additionalSpecs = findAdditionalSpecsToRun(lines)
   testsToRun.additionalSpecs = additionalSpecs
+
+  const pagesToTest = findPagesToTest(lines)
+  testsToRun.pagesToTest = pagesToTest
 
   // pull requests can overwrite the base url
   comments.forEach((comment) => {
@@ -189,14 +194,26 @@ function parsePullRequestUrl(url) {
  * @param {string|string[]} lines PR text lines separately
  */
 function findAdditionalSpecsToRun(lines) {
+  const additionalSpecs = findList(lines, 'Run these Cypress specs too:')
+  return additionalSpecs
+}
+
+/**
+ * @param {string|string[]} lines PR text lines separately
+ */
+function findPagesToTest(lines) {
+  const pages = findList(lines, 'Find specs that visit these pages:')
+  return pages
+}
+
+function findList(lines, startMarker) {
   if (typeof lines === 'string') {
     lines = lines.split('\n')
   }
 
   let done = false
   let foundList = false
-  const additionalSpecs = []
-  const startMarker = 'Run these Cypress specs too:'
+  const list = []
 
   lines.forEach((line, k) => {
     if (done) {
@@ -204,7 +221,6 @@ function findAdditionalSpecsToRun(lines) {
     }
 
     if (line.includes(startMarker)) {
-      // we found the list of specs
       done = true
       for (let i = k + 1; i < lines.length; i++) {
         const maybeSpecLine = lines[i].trim()
@@ -224,16 +240,16 @@ function findAdditionalSpecsToRun(lines) {
           foundList = true
           const cleanedUp = maybeSpecLine.slice(2).replaceAll('`', '')
           if (cleanedUp) {
-            additionalSpecs.push(cleanedUp)
+            list.push(cleanedUp)
           }
-        } else if (additionalSpecs.length) {
+        } else if (list.length) {
           // finished with the list of specs
           break
         }
       }
     }
   })
-  return additionalSpecs
+  return list
 }
 
 function combineEnvOptions(configEnv, parsedEnv) {
