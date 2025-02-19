@@ -272,6 +272,7 @@ describe('findTestsToRun', () => {
         runCypressTests: true,
         tags: [],
         additionalSpecs: ['cypress/e2e/spec-b.cy.js', 'cypress/e2e/**/*.cy.js'],
+        pagesToTest: ['/homepage', '/checkout/step1'],
       })
     })
   })
@@ -285,6 +286,7 @@ describe('findTestsToRun', () => {
         baseUrl: null,
         runCypressTests: true,
         additionalSpecs: [],
+        pagesToTest: [],
         // parses null and undefined values
         env: {
           person: { age: 42 },
@@ -305,6 +307,7 @@ describe('findTestsToRun', () => {
         runCypressTests: true,
         tags,
         additionalSpecs: ['cypress/e2e/spec-b.cy.js'],
+        pagesToTest: [],
       })
     })
   })

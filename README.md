@@ -97,6 +97,17 @@ Sometimes you want to be explicit and run some specs by name or wildcard. Simply
 
 The entire list will be returned in the property `additionalSpecs`. Back ticks will be removed.
 
+## pagesToTest
+
+You can pass parts of URLs that the tests should visit if you are using [cypress-visited-urls](https://github.com/bahmutov/cypress-visited-urls) plugin. List the URLs as a list after:
+
+    Find specs that visit these pages:
+
+    - /homepage/u1234
+    - /checkout/step
+
+Then your project can use `cypress-visited-urls` plugin to check which specs visit the list of these URLs
+
 ## Resolved value
 
 The function might resolve with an object if the pull request was found. You can check if the user wants to run all the tests, or a list of tags

@@ -31,3 +31,8 @@ Run these Cypress specs too:
 - `cypress/e2e/**/*.cy.js`
 
 Back ticks are removed.
+
+Find specs that visit these pages:
+
+- /homepage
+- /checkout/step1
