@@ -17,17 +17,17 @@ async function registerPlugin(on, config, options = {}) {
 
   const testPullRequest =
     options.pull ||
-    config.env.pull ||
-    config.env.pullRequest ||
-    config.env.pullRequestNumber ||
+    config.expose.pull ||
+    config.expose.pullRequest ||
+    config.expose.pullRequestNumber ||
     process.env.TEST_PULL_REQUEST_NUMBER
 
   // commit SHA is a backup if the pull request is unknown
   const testCommit =
     options.commit ||
     options.testCommit ||
-    config.env.commit ||
-    config.env.testCommit
+    config.expose.commit ||
+    config.expose.testCommit
 
   if ((testPullRequest || testCommit) && options.tags) {
     if (typeof options.tags === 'string') {
@@ -85,20 +85,20 @@ async function registerPlugin(on, config, options = {}) {
       } else {
         if (testsToRun.all) {
           console.log('running all tests, removing possible grep options')
-          delete config.env.grep
-          delete config.env.grepTags
+          delete config.expose.grep
+          delete config.expose.grepTags
         } else if (testsToRun.tags.length) {
           const grepTags = testsToRun.tags.join(',')
           console.log('grepping by tags "%s"', grepTags)
-          delete config.env.grep
-          config.env.grepTags = grepTags
+          delete config.expose.grep
+          config.expose.grepTags = grepTags
         }
       }
 
-      if (Object.keys(testsToRun.env).length) {
+      if (Object.keys(testsToRun.expose).length) {
         console.log('found the following env values in the PR text')
-        console.log('%o', testsToRun.env)
-        combineEnvOptions(config.env, testsToRun.env)
+        console.log('%o', testsToRun.expose)
+        combineEnvOptions(config.expose, testsToRun.expose)
       }
     }
 

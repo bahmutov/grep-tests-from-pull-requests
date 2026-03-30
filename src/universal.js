@@ -89,7 +89,7 @@ function shouldRunCypressTests(line) {
  * @property {boolean} all - if true, run all tests
  * @property {string[]} tags - list of test tags to run
  * @property {string|null} baseUrl - base URL to use
- * @property {Object<string, string|number|boolean>} env - additional environment variables to set
+ * @property {Object<string, string|number|boolean>} expose - additional environment variables to set
  * @property {boolean} runCypressTests - if true, run Cypress tests. True by default
  * @property {string[]} additionalSpecs - additional Cypress specs to run
  * @property {string[]} pagesToTest - additional URLs to test
@@ -102,7 +102,7 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
     tags: [],
     baseUrl: null,
     // additional environment variables to set found in the text
-    env: {},
+    expose: {},
     runCypressTests: true,
     additionalSpecs: [],
     pagesToTest: [],
@@ -123,7 +123,7 @@ function findTestsToRun(pullRequestBody, tagsToLookFor = [], comments = []) {
       const envVariable = getCypressEnvVariable(line)
       if (envVariable && 'key' in envVariable && 'value' in envVariable) {
         debug('found env variable: %s', envVariable)
-        testsToRun.env[envVariable.key] = envVariable.value
+        testsToRun.expose[envVariable.key] = envVariable.value
       }
     }
   })

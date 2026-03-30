@@ -12,7 +12,7 @@ Please pick all tests you would like to run against this pull request
 - [ ] tests tagged `@sanity`
 - [ ] tests tagged `@quick`
 
-Additional Cypress environment values to pass from this pull request. Cypress should have these values cast correctly and available in `Cypress.env()` object.
+Additional Cypress environment values to pass from this pull request. Cypress should have these values cast correctly and available in `Cypress.expose()` object.
 
 CYPRESS_num=1
 CYPRESS_correct=true

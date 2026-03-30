@@ -33,7 +33,7 @@ module.exports = async (on, config) => {
   }
   await pickTestsFromPullRequest(on, config, pullOptions)
 
-  // cypress-grep plugin registration
+  // grep plugin registration
 
   // IMPORTANT: the config.env object might be modified
   // by the above plugins, thus return the config object from this function
@@ -131,7 +131,7 @@ if (testsToRun) {
 
 ## Additional environment variables
 
-If the pull request has lines that start with `CYPRESS_...=value` then they are automatically are parsed and cast and added to the `Cypress.env` object. For example
+If the pull request has lines that start with `CYPRESS_...=value` then they are automatically are parsed and cast and added to the `Cypress.expose` object. For example
 
 ```
 CYPRESS_num=1
@@ -139,13 +139,13 @@ CYPRESS_correct=true
 CYPRESS_FRIENDLY_GREETING=Hello
 ```
 
-Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.env`.
+Will add the values `{num: 1, correct: true, FRIENDLY_GREETING: "Hello"}` to the `Cypress.expose`.
 
 If the string value is a valid JSON, it is automatically parsed
 
 ```
 CYPRESS_person={"name":"Joe"}
-// produces Cypress.env('person') object { name: 'Joe' }
+// produces Cypress.expose('person') object { name: 'Joe' }
 ```
 
 **Note:** an empty value is converted to `undefined`. The `undefined` value will NOT replace any existing config `env` values.

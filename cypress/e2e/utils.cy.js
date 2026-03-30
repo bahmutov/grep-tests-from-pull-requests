@@ -264,7 +264,7 @@ describe('findTestsToRun', () => {
       expect(found).to.deep.equal({
         all: true,
         baseUrl: null,
-        env: {
+        expose: {
           num: 1,
           correct: true,
           FRIENDLY_GREETING: 'Hello',
@@ -288,7 +288,7 @@ describe('findTestsToRun', () => {
         additionalSpecs: [],
         pagesToTest: [],
         // parses null and undefined values
-        env: {
+        expose: {
           person: { age: 42 },
           name: null,
           flag: undefined,
@@ -303,7 +303,7 @@ describe('findTestsToRun', () => {
       expect(found).to.deep.equal({
         all: false,
         baseUrl: 'http://localhost:7777',
-        env: {},
+        expose: {},
         runCypressTests: true,
         tags,
         additionalSpecs: ['cypress/e2e/spec-b.cy.js'],
