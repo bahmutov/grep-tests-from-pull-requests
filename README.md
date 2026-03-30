@@ -33,7 +33,7 @@ module.exports = async (on, config) => {
   }
   await pickTestsFromPullRequest(on, config, pullOptions)
 
-  // cypress-grep plugin registration
+  // grep plugin registration
 
   // IMPORTANT: the config.env object might be modified
   // by the above plugins, thus return the config object from this function

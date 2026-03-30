@@ -1,7 +1,8 @@
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  env: {
+  allowCypressEnv: false,
+  expose: {
     grepFilterSpecs: true,
     grepOmitFiltered: true,
   },
